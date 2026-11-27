@@ -55,57 +55,89 @@ async function initVault() {
     }
     const fileList = await manifestRes.json();
     if (!Array.isArray(fileList)) {
-      throw new Error("papers/manifest.json must be a JSON array of filenames.");
+      throw new Error("papers/manifest.json must be a JSON array like [\"file.json\"].");
     }
 
     const loaded = [];
     for (const filename of fileList) {
       const fileRes = await fetch("./papers/" + filename + "?t=" + Date.now());
       if (!fileRes.ok) {
-        showBanner("Warning: Could not load papers/" + filename + " (HTTP " + fileRes.status + ")", false);
+        showBanner("Missing file: papers/" + filename + " (HTTP " + fileRes.status + ")", false);
         continue;
       }
-      const paperData = await fileRes.json();
-      const meta = paperData.meta || {};
-      const subjectCode = String(meta.subjectCode || "9701");
-      const level = String(meta.level || "AS").toUpperCase().includes("A2") ? "A2" : "AS";
-      const paperCode = meta.paperCode || filename.replace(".json", "");
-      const series = meta.series || "";
 
-      (paperData.questions || []).forEach(function (q, idx) {
-        loaded.push({
-          id: paperCode + "-" + (q.qNum || idx) + "-" + idx,
-          subjectCode: subjectCode,
-          level: level,
-          paperCode: paperCode,
-          series: series,
-          qNum: q.qNum || String(idx + 1),
-          chapter: q.chapter || "General Syllabus Topics",
-          ao: q.ao === "AO1" ? "AO1" : "AO2",
-          marks: Number(q.marks) || 1,
-          type: q.type || (q.options ? "mcq" : "structured"),
-          question: q.question || "",
-          options: q.options || null,
-          answer: q.answer || null,
-          steps: Array.isArray(q.steps) ? q.steps : [],
-          markScheme: Array.isArray(q.markScheme) ? q.markScheme : [],
-          examinerReport: q.examinerReport || "Review command words, units, and significant figures carefully."
+      let paperData;
+      try {
+        paperData = await fileRes.json();
+      } catch (parseErr) {
+        showBanner("Invalid JSON syntax inside papers/" + filename + ": " + parseErr.message, false);
+        continue;
+      }
+
+      const meta = paperData.meta || {};
+      const defaultSubject = String(meta.subjectCode || meta.subject || "9701");
+      const defaultLevel = String(meta.level || "AS").toUpperCase().includes("A2") ? "A2" : "AS";
+
+      // Format A: Flat { meta, questions: [...] }
+      if (Array.isArray(paperData.questions)) {
+        const pCode = meta.paperCode || filename.replace(".json", "");
+        const series = meta.series || "";
+        paperData.questions.forEach(function (q, idx) {
+          loaded.push(normalizeQuestion(q, idx, defaultSubject, defaultLevel, pCode, series));
         });
-      });
+      }
+
+      // Format B: Nested { meta, papers: { "9701/12": { series, questions: [...] } } }
+      if (paperData.papers && typeof paperData.papers === "object") {
+        Object.keys(paperData.papers).forEach(function (pCode) {
+          const pObj = paperData.papers[pCode] || {};
+          const series = pObj.series || meta.series || "";
+          (pObj.questions || []).forEach(function (q, idx) {
+            loaded.push(normalizeQuestion(q, idx, defaultSubject, defaultLevel, pCode, series));
+          });
+        });
+      }
     }
 
     appState.allQuestions = loaded;
     render();
     showBanner(
-      "✓ Loaded " + loaded.length + " verified Cambridge past-paper question" +
-      (loaded.length === 1 ? "" : "s") + " from " + fileList.length + " paper file" +
+      "✓ Loaded " + loaded.length + " verified Cambridge question" +
+      (loaded.length === 1 ? "" : "s") + " from " + fileList.length + " file" +
       (fileList.length === 1 ? "" : "s") + ".",
-      true
+      loaded.length > 0
     );
   } catch (err) {
     render();
     showBanner("Setup Notice: " + err.message, false);
   }
+}
+
+function normalizeQuestion(q, idx, subjectCode, level, paperCode, series) {
+  const steps = Array.isArray(q.steps)
+    ? q.steps
+    : (Array.isArray(q.howItsDone) ? q.howItsDone : []);
+  const ms = Array.isArray(q.markScheme)
+    ? q.markScheme
+    : (q.answer ? ["Correct Answer: " + q.answer + " [1]"] : []);
+  return {
+    id: paperCode + "-" + (q.qNum || idx) + "-" + idx,
+    subjectCode: String(q.subjectCode || subjectCode),
+    level: String(q.level || level).toUpperCase().includes("A2") ? "A2" : "AS",
+    paperCode: paperCode,
+    series: series,
+    qNum: String(q.qNum || idx + 1),
+    chapter: q.chapter || "General Syllabus Topics",
+    ao: q.ao === "AO1" ? "AO1" : "AO2",
+    marks: Number(q.marks) || 1,
+    type: q.type || (q.options ? "mcq" : "structured"),
+    question: q.question || "",
+    options: q.options || null,
+    answer: q.answer || null,
+    steps: steps,
+    markScheme: ms,
+    examinerReport: q.examinerReport || q.examinerPitfall || "Check command words, units, and significant figures carefully."
+  };
 }
 
 function setSubject(code) {

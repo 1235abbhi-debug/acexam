@@ -21,11 +21,9 @@ const appState = {
 };
 
 function esc(val) {
-  return String(val == null ? "" : val)
-    .replace(/&/g, "&")
-    .replace(/</g, "<")
-    .replace(/>/g, ">")
-    .replace(/"/g, "'");;
+  const div = document.createElement("div");
+  div.textContent = val == null ? "" : String(val);
+  return div.innerHTML;
 }
 
 function showBanner(msg, isOk) {
@@ -266,7 +264,7 @@ function render() {
         }).join("");
 
         notesDrawer = '<div class="bg-indigo-50/60 border-b border-indigo-100 p-4 sm:p-5 space-y-3">' +
-          '<div class="font-mono text-xs font-bold uppercase text-indigo-900">Chapter Revision Notes & Examiner Traps</div>' +
+          '<div class="font-mono text-xs font-bold uppercase text-indigo-900">Chapter Revision Notes &amp; Examiner Traps</div>' +
           '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">' + cardsHtml + '</div></div>';
       }
 
@@ -396,7 +394,7 @@ function renderModal() {
     const btnLabel = appState.revealed ? "Hide Mark Scheme & Examiner Report" : "Reveal Working, Mark Scheme & Examiner Report";
     body.innerHTML = '<div class="cambridge-sheet p-6 sm:p-8 rounded-lg space-y-5">' +
       '<div class="flex justify-between border-b border-slate-400 pb-2 text-xs font-sans font-bold">' +
-      '<span>CAMBRIDGE INTERNATIONAL AS & A LEVEL</span>' +
+      '<span>CAMBRIDGE INTERNATIONAL AS &amp; A LEVEL</span>' +
       '<span class="font-mono">' + esc(q.paperCode) + ' Q' + esc(q.qNum) + '</span></div>' +
       '<div class="text-base leading-relaxed whitespace-pre-line">' + esc(q.question) + '</div>' +
       mcqOptionsHtml + lines +

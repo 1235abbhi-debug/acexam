@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "subjectCode": "9701",
+    "subjectName": "Chemistry",
+    "level": "AS",
+    "paperCode": "9701/24",
+    "series": "Oct/Nov 2025"
+  },
+  "questions": [
+    {
+      "qNum": "1(b)(iv)",
+      "chapter": "Chemical Energetics",
+      "ao": "AO2",
+      "marks": 2,
+      "type": "structured",
+      "question": "Use ΔHf°[NH3(g)] = -46 kJ mol⁻¹ and ΔHf°[HCl(g)] = -92 kJ mol⁻¹ to calculate ΔHr for the reaction:\n\n3Cl2(g) + 2NH3(g) → N2(g) + 6HCl(g)",
+      "steps": [
+        "Step 1: Pure elements in their standard states (Cl2 and N2) have ΔHf° = 0 kJ mol⁻¹.",
+        "Step 2: Apply ΔHr = ΣΔHf°(products) - ΣΔHf°(reactants) = [6 × (-92)] - [2 × (-46)] = -552 + 92 = -460 kJ mol⁻¹."
+      ],
+      "markScheme": [
+        "M1: Correct stoichiometric multipliers (6 × -92) and (2 × -46) [1]",
+        "M2: ΔHr = -460 kJ mol⁻¹ [1]"
+      ],
+      "examinerReport": "Candidates frequently divided -460 by 3 thinking enthalpy of reaction had to be per mole of Cl2. Always calculate ΔHr for the exact balanced equation given."
+    },
+    {
+      "qNum": "2(b)(ii)",
+      "chapter": "Equilibria",
+      "ao": "AO2",
+      "marks": 3,
+      "type": "structured",
+      "question": "A 5.00 dm³ sealed vessel contains 0.400 mol of CO(g) and 0.800 mol of H2(g) at 290 °C. At equilibrium, 0.280 mol of CH3OH(g) is present:\n\nCO(g) + 2H2(g) ⇌ CH3OH(g)\n\nCalculate Kc at 290 °C to three significant figures and state its units.",
+      "steps": [
+        "Step 1 (ICE Moles): n(CO) = 0.400 - 0.280 = 0.120 mol; n(H2) = 0.800 - 2(0.280) = 0.240 mol; n(CH3OH) = 0.280 mol.",
+        "Step 2 (Convert to Concentration using V = 5.00 dm³): [CO] = 0.0240, [H2] = 0.0480, [CH3OH] = 0.0560 mol dm⁻³.",
+        "Step 3 (Substitute into Kc): Kc = 0.0560 / (0.0240 × 0.0480²) = 1.01 × 10³ mol⁻² dm⁶."
+      ],
+      "markScheme": [
+        "M1: Equilibrium moles n(CO) = 0.120 and n(H2) = 0.240 [1]",
+        "M2: Dividing all three mole values by 5.00 dm³ [1]",
+        "M3: Kc = 1.01 × 10³ AND units mol⁻² dm⁶ [1]"
+      ],
+      "examinerReport": "Two common errors occurred: forgetting to divide equilibrium moles by the 5.00 dm³ volume, and subtracting 0.280 instead of 2 × 0.280 for H2."
+    },
+    {
+      "qNum": "12/Q5",
+      "chapter": "Atomic Structure",
+      "ao": "AO1",
+      "marks": 1,
+      "type": "mcq",
+      "question": "Which electronic configuration represents an isolated gaseous atom with the largest drop between its third and fourth ionisation energies?",
+      "options": {
+        "A": "1s² 2s² 2p⁶ 3s² 3p¹",
+        "B": "1s² 2s² 2p⁶ 3s² 3p²",
+        "C": "1s² 2s² 2p⁶ 3s² 3p³",
+        "D": "1s² 2s² 2p⁶ 3s²"
+      },
+      "answer": "A",
+      "steps": [
+        "Step 1: A large jump between the 3rd and 4th ionisation energies indicates 3 valence electrons in the outer shell (Group 13).",
+        "Step 2: 1s² 2s² 2p⁶ 3s² 3p¹ (Al) has 3 electrons in the n = 3 shell; removing the 4th electron breaks into the inner 2p subshell."
+      ],
+      "markScheme": [
+        "B1: Correct option A [1]"
+      ],
+      "examinerReport": "Many candidates confused Group 13 (jump after 3rd IE) with Group 14 (jump after 4th IE)."
+    }
+  ]
+}

@@ -25,7 +25,7 @@ function esc(val) {
     .replace(/&/g, "&")
     .replace(/</g, "<")
     .replace(/>/g, ">")
-    .replace(/"/g, """);
+    .replace(/"/g, "'");
 }
 
 function showBanner(msg, isOk) {
